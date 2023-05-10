@@ -27,7 +27,7 @@ typedef struct {
     .address = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} \
 } \
 
-bool ip_mask_load(ip_mask_t *ip, char *ip_string);
+bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len);
 void ip_mask_concatenate(ip_mask_t *mask_to, ip_mask_t *mask_from);
 bool ip_mask_check_address(ip_mask_t *mask, ip_address_t *address);
 

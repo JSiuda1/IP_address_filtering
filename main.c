@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "ip_mask.h"
 
 bool load_ip_mask_from_file(ip_mask_t *mask, char *file_path);
@@ -40,7 +41,10 @@ bool load_ip_mask_from_file(ip_mask_t *mask, char *file_path) {
     char line[25];
     ip_mask_t temp_mask;
     while (fgets(line, sizeof(line), mask_list_file)) {
-        ip_mask_load(&temp_mask, line);
+        if (ip_mask_load(&temp_mask, line, strlen(line)) == false) {
+            printf("Invalid mask format -> %s\n", line);
+            return false;
+        }
         printf("Mask -> ");
         print_mask(&temp_mask);
         ip_mask_concatenate(mask, &temp_mask);

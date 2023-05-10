@@ -20,27 +20,32 @@ bool convert_char_to_hex(char in, uint8_t *out) {
     return true;
 }
 
-bool ip_mask_load(ip_mask_t *ip, char *ip_string) {
-    uint8_t digit;
+bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len) {
     memset(ip->address, 0, sizeof(ip->address));
 
-    for (int i = 0; i < 8; ++i) {
-        if (*ip_string == '.') {
-            i--;
-            ip_string++;
-            continue;
+    uint8_t byte_nb = 0;
+    uint8_t digit = 0;
+    uint8_t character;
+    for (int i = 0; i < ip_len; ++i) {
+        if (byte_nb == 8) {
+            return true;
         }
 
-        if (*ip_string == '*') {
-            digit = IP_MASK_STAR;
-        } else {
-            if (convert_char_to_hex(*(ip_string), &digit) == false) {
+        character = ip_string[i];
+        if (i % 3 == 2) {
+            if (character != '.') {
                 return false;
             }
+        } else {
+            if (character == '*') {
+                digit = IP_MASK_STAR;
+            } else {
+                if (convert_char_to_hex(character, &digit) == false) {
+                    return false;
+                }
+            }
+            ip->address[byte_nb++] = digit;
         }
-
-        ip->address[i] = digit;
-        ip_string++;
     }
 
     return true;
