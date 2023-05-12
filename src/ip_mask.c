@@ -2,11 +2,19 @@
 #include <stdio.h>
 #include "ip_mask.h"
 
-#define CHECK_IS_UPPERCASE_HEX(x) x > 0x40 && x < 0x47
-#define CHECK_IS_LOWERCASE_HEX(x) x > 0x60 && x < 0x67
-#define CHECK_IS_NUMBER(x) x > 0x2f && x < 0x3A
+#define CHECK_IS_UPPERCASE_HEX(x) x >= 'A' && x <= 'F'
+#define CHECK_IS_LOWERCASE_HEX(x) x >= 'a' && x <= 'f'
+#define CHECK_IS_NUMBER(x) x >= '0' && x <= '9'
 
-bool convert_char_to_hex(char in, uint8_t *out) {
+/**
+ * @brief Conver char to hex value
+ *
+ * @param in char which represent hex value
+ * @param out hex value
+ * @return true correct conversion
+ * @return false char does not represent hex value
+ */
+static bool convert_char_to_hex(char in, uint8_t *out) {
     if (CHECK_IS_LOWERCASE_HEX(in)) {
         *out = in - 0x57;
     } else if (CHECK_IS_UPPERCASE_HEX(in)) {
@@ -26,7 +34,7 @@ bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len) {
     uint8_t byte_nb = 0;
     uint8_t digit = 0;
     uint8_t character;
-    for (int i = 0; i < ip_len; ++i) {
+    for (size_t i = 0; i < ip_len; ++i) {
         if (byte_nb == 8) {
             return true;
         }
@@ -51,14 +59,20 @@ bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len) {
     return true;
 }
 
-void ip_mask_concatenate(ip_mask_t *mask_to, ip_mask_t *mask_from) {
-    for (int i = 0; i < sizeof(mask_to->address); ++i) {
-        mask_to->address[i] &= mask_from->address[i];
+bool ip_mask_concatenate(ip_mask_t *mask_to, ip_mask_t *mask_from) {
+    for (size_t i = 0; i < sizeof(mask_to->address); ++i) {
+        if (mask_to->address[i] == IP_MASK_STAR || mask_from->address[i] == IP_MASK_STAR) {
+            mask_to->address[i] &= mask_from->address[i];
+        } else if (mask_to->address[i] != mask_from->address[i]) {
+            return false;
+        }
     }
+
+    return true;
 }
 
 bool ip_mask_check_address(ip_mask_t *mask, ip_address_t *address) {
-    for (int i = 0; i < sizeof(address->address); ++i) {
+    for (size_t i = 0; i < sizeof(address->address); ++i) {
         if (mask->address[i * 2] != IP_MASK_STAR) {
             if (mask->address[i * 2] != (address->address[i] >> 4)) {
                 return false;

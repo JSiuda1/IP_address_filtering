@@ -12,8 +12,14 @@ typedef struct {
     .address = {0, 0, 0, 0} \
 } \
 
+/**
+ * @brief Load decimal form ip address
+ *
+ * @param ip pointer to ip struct
+ * @param ip_string pointer to decimal form ip string, should contain null terminator
+ * @return true success
+ * @return false unable to load ip address
+ */
 bool ip_address_load_binary(ip_address_t *ip, char *ip_string);
 
 #endif
-
-// 0.404s
