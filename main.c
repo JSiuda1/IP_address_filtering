@@ -116,7 +116,7 @@ bool load_and_check_addresses(ip_mask_t *mask, char *file_path) {
         }
 
         if (ip_mask_check_address(mask, &address) == true) {
-            print_address_decimal(&address);
+            print_address_hex(&address);
         }
     }
 

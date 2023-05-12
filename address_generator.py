@@ -11,7 +11,7 @@ def generate_ip_address() -> list:
 
 def generate_ip_mask() -> list:
     mask_characters = [str(i) for i in range(0, 10)]
-    mask_characters = mask_characters + ["a", "b", "c", "d" ,"e" ,"f"]
+    mask_characters = mask_characters + ["A", "B", "C", "D" ,"E" ,"F"]
     mask_characters = mask_characters + ["*" for i in range(0, 100)]
     return [mask_characters[random.randint(0, len(mask_characters) - 1)] for i in range(8)]
 

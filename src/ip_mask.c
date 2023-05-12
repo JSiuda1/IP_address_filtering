@@ -60,13 +60,16 @@ bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len) {
 }
 
 bool ip_mask_concatenate(ip_mask_t *mask_to, ip_mask_t *mask_from) {
+   ip_mask_t temp_mask = *mask_to;
     for (size_t i = 0; i < sizeof(mask_to->address); ++i) {
         if (mask_to->address[i] == IP_MASK_STAR || mask_from->address[i] == IP_MASK_STAR) {
-            mask_to->address[i] &= mask_from->address[i];
+            temp_mask.address[i] &= mask_from->address[i];
         } else if (mask_to->address[i] != mask_from->address[i]) {
             return false;
         }
     }
+
+    *mask_to = temp_mask;
 
     return true;
 }

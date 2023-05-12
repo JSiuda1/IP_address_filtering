@@ -52,7 +52,7 @@ bool ip_mask_load(ip_mask_t *ip, char *ip_string, size_t ip_len);
  * @param mask_to mask to store result
  * @param mask_from mask to concatenate with mask_to
  * @return true
- * @return false masks do not have intersection
+ * @return false masks do not have intersection in at least one part of addres
  */
 bool ip_mask_concatenate(ip_mask_t *mask_to, ip_mask_t *mask_from);
 
